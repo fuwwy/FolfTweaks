@@ -15,10 +15,10 @@ public class ExamplePlugin extends Plugin {
     @Override
     public Manifest getManifest() {
         Manifest manifest = new Manifest();
-        manifest.authors = new Manifest.Author[]{ new Manifest.Author("DISCORD USERNAME", 123456789L) };
+        manifest.authors = new Manifest.Author[]{ new Manifest.Author("Checkium", 96609345684406272L) };
         manifest.description = "Example Plugin.";
         manifest.version = "1.0.0";
-        manifest.updateUrl = "https://raw.githubusercontent.com/USERNAME/REPONAME/builds/updater.json";
+        manifest.updateUrl = "https://raw.githubusercontent.com/fuwwy/FolfTweaks/builds/updater.json";
         return manifest;
     }
     public static Map<String, List<String>> getClassesToPatch() {
