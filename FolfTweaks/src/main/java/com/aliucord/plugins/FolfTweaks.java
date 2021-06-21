@@ -24,6 +24,7 @@ import com.aliucord.utils.ReflectUtils;
 import com.aliucord.wrappers.ChannelWrapper;
 import com.discord.api.role.GuildRole;
 import com.discord.models.domain.ModelUserProfile;
+import com.discord.models.domain.emoji.Emoji;
 import com.discord.models.guild.Guild;
 import com.discord.models.member.GuildMember;
 import com.discord.models.user.CoreUser;
@@ -33,6 +34,8 @@ import com.discord.stores.StoreStream;
 import com.discord.utilities.color.ColorCompat;
 import com.discord.utilities.icon.IconUtils;
 import com.discord.utilities.permissions.ManageUserContext;
+import com.discord.widgets.chat.input.emoji.EmojiPickerListener;
+import com.discord.widgets.chat.input.emoji.WidgetEmojiPickerSheet;
 import com.discord.widgets.settings.WidgetSettings;
 import com.discord.widgets.user.Badge;
 import com.discord.widgets.user.profile.UserProfileAdminView;
@@ -52,7 +55,7 @@ public class FolfTweaks extends Plugin {
         Manifest manifest = new Manifest();
         manifest.authors = new Manifest.Author[]{new Manifest.Author("Folf", 96609345684406272L)};
         manifest.description = "Folf tweaks";
-        manifest.version = "1.0.1";
+        manifest.version = "1.0.2";
         manifest.updateUrl = "https://raw.githubusercontent.com/fuwwy/FolfTweaks/builds/updater.json";
         return manifest;
     }
@@ -63,6 +66,7 @@ public class FolfTweaks extends Plugin {
         patchSettingsTab();
         patchAlwaysAnimate();
         patchAdminWidget();
+        patchEmojiPicker();
     }
 
     private void uwu() {
@@ -180,6 +184,23 @@ public class FolfTweaks extends Plugin {
                     e.printStackTrace();
                 }
                 callFrame.args[0] = state;
+            }
+        }));
+    }
+
+    private void patchEmojiPicker() {
+        patcher.patch(WidgetEmojiPickerSheet.class, "onEmojiPicked", new Class<?>[]{Emoji.class}, new PinePrePatchFn(callFrame -> {
+            if (FolfTweaksSettings.autoCloseReactPicker) return;
+            try {
+                EmojiPickerListener emojiPickerListener  = (EmojiPickerListener) ReflectUtils.getField(callFrame.thisObject, "emojiPickerListenerDelegate", true);
+
+                if (emojiPickerListener != null) {
+                    emojiPickerListener.onEmojiPicked((Emoji) callFrame.args[0]);
+                }
+
+                callFrame.setResult(null);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
             }
         }));
     }

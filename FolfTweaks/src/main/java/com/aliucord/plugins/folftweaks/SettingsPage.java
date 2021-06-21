@@ -20,8 +20,7 @@ import com.lytefast.flexinput.R$h;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
-import static com.aliucord.plugins.folftweaks.FolfTweaksSettings.alwaysAnimateGuildIcons;
-import static com.aliucord.plugins.folftweaks.FolfTweaksSettings.alwaysShowGuildProfileAdminWidget;
+import static com.aliucord.plugins.folftweaks.FolfTweaksSettings.*;
 
 public class SettingsPage extends com.aliucord.fragments.SettingsPage {
 
@@ -77,6 +76,20 @@ public class SettingsPage extends com.aliucord.fragments.SettingsPage {
             alwaysShowGuildProfileAdminWidget = c;
         });
         layout.addView(alwaysShowGuildProfileAdminWidgetSetting);
+
+        header = new TextView(context, null, 0, R$h.UiKit_Settings_Item_Header);
+        header.setText("Behavior");
+        header.setTypeface(ResourcesCompat.getFont(context, Constants.Fonts.whitney_semibold));
+        layout.addView(header);
+
+        CheckedSetting autoCloseReactPickerSetting = Utils.createCheckedSetting(context, CheckedSetting.ViewType.SWITCH, "Auto-close emoji picker when adding a reaction", null);
+        autoCloseReactPickerSetting.setChecked(autoCloseReactPicker);
+        autoCloseReactPickerSetting.setOnCheckedListener(c -> {
+            sets.setBool("autoCloseReactPicker", c);
+            autoCloseReactPicker = c;
+        });
+        layout.addView(autoCloseReactPickerSetting);
+
     }
 
 }
